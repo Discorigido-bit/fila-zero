@@ -54,7 +54,7 @@ export default function Cadastro() {
 
   return (
     <div className="tela-cheia">
-      <div className="card-login" style={{ width: 380 }}>
+      <div className="card-login" style={{ maxWidth: 380 }}>
         <div className="logo-emoji">FZ</div>
         <h1>Criar conta</h1>
         <p className="subtitulo">Cadastro do aluno — FilaZero</p>

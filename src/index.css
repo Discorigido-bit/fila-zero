@@ -220,3 +220,80 @@ button { cursor: pointer; font-family: inherit; }
 .toast-acao { align-self: flex-start; margin-top: 6px; padding: 6px 12px; border: none; border-radius: 8px; background: linear-gradient(135deg, var(--vermelho), var(--laranja)); color: white; font-weight: 700; font-size: .78rem; }
 .toast-fechar { background: transparent; border: none; color: #9ca3af; font-size: 1.3rem; line-height: 1; padding: 0 2px; }
 .toast-fechar:hover { color: white; }
+
+/* ======================= RESPONSIVO / CELULAR ======================= */
+html { -webkit-text-size-adjust: 100%; }
+button, a { -webkit-tap-highlight-color: transparent; }
+.card-login { width: 100%; max-width: 320px; }
+.tela-cheia { padding: 16px; }
+.grid-gerenciar { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; gap: 16px; align-items: start; }
+.nav-inferior { display: none; }
+.badge-qtd { display: inline-block; min-width: 18px; margin-left: 4px; padding: 1px 5px; border-radius: 10px; background: var(--vermelho); color: white; font-size: .68rem; text-align: center; }
+
+@media (max-width: 1000px) {
+  .kanban { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .so-desktop { display: none !important; }
+
+  /* cabeçalho do aluno enxuto + barra inferior */
+  .header { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+  .header nav { display: none; }
+  .header .direita { gap: 8px; flex-wrap: wrap; justify-content: flex-end; margin-left: auto; }
+  .container { padding: 14px 14px 96px; }
+  .nav-inferior {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+    background: white; border-top: 1px solid #e5e7eb; box-shadow: 0 -4px 18px rgba(0,0,0,.08);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-inferior a, .nav-inferior button {
+    flex: 1; padding: 12px 2px; border: none; background: transparent;
+    font-size: .68rem; font-weight: 700; color: var(--cinza); text-align: center; font-family: inherit;
+  }
+  .nav-inferior a.ativo { color: var(--vermelho); box-shadow: inset 0 3px 0 var(--vermelho); }
+
+  /* campos sem zoom automático do iPhone e botões fáceis de tocar */
+  .campo input, .busca, .select { font-size: 16px; }
+  .btn { min-height: 44px; }
+  .qtd-controle button { width: 36px; height: 36px; font-size: 1.1rem; }
+  .qtd-controle { gap: 12px; }
+  .toggle-row { padding: 13px 0; }
+  .switch { width: 48px; height: 28px; flex-shrink: 0; }
+  .switch .bola { width: 24px; height: 24px; }
+  .switch.on .bola { left: 22px; }
+  .tabs button, .categorias button { padding: 10px 14px; }
+
+  /* abas e categorias com rolagem lateral */
+  .tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button { white-space: nowrap; flex-shrink: 0; }
+  .categorias { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+  .categorias button { white-space: nowrap; flex-shrink: 0; }
+
+  /* cardápio em 2 colunas */
+  .grid-produtos { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .produto-info { padding: 10px; }
+  .produto-info h3 { font-size: .88rem; }
+  .produto-info p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .produto-imagem { height: 76px; }
+
+  /* cantina */
+  .header .relogio { order: 3; width: 100%; }
+  .relogio .hora { font-size: 1.3rem; }
+  .kanban { grid-template-columns: 1fr; }
+  .grid-gerenciar { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* pop-up acima da barra inferior, largura total */
+  .toast-area { left: 12px; right: 12px; bottom: 76px; max-width: none; }
+
+  /* telas de login */
+  .card-login { padding: 24px 20px; }
+}
+
+/* telas de toque: sem efeito de "levantar" que fica preso depois do toque */
+@media (hover: none) {
+  .produto-card:hover { transform: none; box-shadow: none; }
+  .btn:hover { transform: none; }
+}

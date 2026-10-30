@@ -41,7 +41,7 @@ function GerenciarCardapio() {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px, 340px) 1fr', gap: 16, alignItems: 'start' }}>
+    <div className="grid-gerenciar">
       <form onSubmit={enviar} style={{ background: 'white', borderRadius: 12, padding: 16 }}>
         <h3 style={{ marginTop: 0 }}>Adicionar produto</h3>
         <div className="campo"><label>Nome</label><input value={form.nome} onChange={set('nome')} placeholder="Ex: Pastel de queijo" required /></div>
