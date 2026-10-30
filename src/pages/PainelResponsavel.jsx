@@ -52,27 +52,28 @@ export default function PainelResponsavel() {
 
   function toggleCategoria(cat) { setCategoriasBloqueadas((p) => (p.includes(cat) ? p.filter((c) => c !== cat) : [...p, cat])); setSalvoRestricoes(false) }
   function toggleItem(id) { setItensBloqueados((p) => (p.includes(id) ? p.filter((i) => i !== id) : [...p, id])); setSalvoRestricoes(false) }
-  function salvarRestricoes() {
-    atualizarRestricoes(ra, { categoriasBloqueadas, itensBloqueados })
+  async function salvarRestricoes() {
+    const r = await atualizarRestricoes(ra, { categoriasBloqueadas, itensBloqueados })
+    if (!r.ok) { mostrarToast(r.erro, { titulo: 'Erro ao salvar', tipo: 'erro' }); return }
     setSalvoRestricoes(true)
     mostrarToast('O cardápio do aluno já foi atualizado.', { titulo: 'Restrições salvas' })
   }
 
-  function salvarLimites(e) {
+  async function salvarLimites(e) {
     e.preventDefault()
     const d = paraNumero(limDiario)
     const m = paraNumero(limMensal)
     if ((d != null && !(d > 0)) || (m != null && !(m > 0))) { setErroLimites('Use um valor maior que zero, ou deixe vazio para ficar sem limite.'); return }
-    const r = atualizarLimites(ra, { limiteDiario: d, limiteMensal: m })
+    const r = await atualizarLimites(ra, { limiteDiario: d, limiteMensal: m })
     if (!r.ok) { setErroLimites(r.erro); return }
     setErroLimites('')
     mostrarToast('Os novos limites já valem para os próximos pedidos.', { titulo: 'Limites salvos' })
   }
 
-  function recarregar(e) {
+  async function recarregar(e) {
     e.preventDefault()
     const v = paraNumero(valorSaldo)
-    const r = adicionarSaldo(ra, v)
+    const r = await adicionarSaldo(ra, v)
     if (!r.ok) { setErroSaldo(r.erro); return }
     setErroSaldo('')
     setValorSaldo('')

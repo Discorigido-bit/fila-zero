@@ -14,6 +14,7 @@ export default function Pagamento() {
   const { carrinho, criarPedido, aluno, gastos, cantinaAberta } = useApp()
   const [forma, setForma] = useState('saldo')
   const [erro, setErro] = useState('')
+  const [enviando, setEnviando] = useState(false)
   const navigate = useNavigate()
   const total = carrinho.reduce((s, i) => s + i.preco * i.qtd, 0)
 
@@ -21,8 +22,12 @@ export default function Pagamento() {
 
   const { hoje, mes } = gastos(aluno.ra)
 
-  function confirmar() {
-    const r = criarPedido(forma)
+  async function confirmar() {
+    if (enviando) return
+    setErro('')
+    setEnviando(true)
+    const r = await criarPedido(forma)
+    setEnviando(false)
     if (!r.ok) { setErro(r.erro); return }
     navigate(`/pedido/${r.pedido.id}`)
   }
@@ -66,7 +71,7 @@ export default function Pagamento() {
         </div>
 
         {erro && <div className="aviso-banner fechada">{erro}</div>}
-        <button className="btn" disabled={!cantinaAberta} onClick={confirmar}>Confirmar e pagar {moeda(total)}</button>
+        <button className="btn" disabled={!cantinaAberta || enviando} onClick={confirmar}>{enviando ? 'Enviando pedido...' : `Confirmar e pagar ${moeda(total)}`}</button>
       </div>
     </div>
   )

@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+
+    function logado() { return request.auth != null; }
+    function cantina() {
+      return logado() && exists(/databases/$(db)/documents/funcionarios/$(request.auth.uid));
+    }
+    function cantinaAberta() {
+      return !exists(/databases/$(db)/documents/config/cantina)
+          || get(/databases/$(db)/documents/config/cantina).data.aberta == true;
+    }
+
+    // Quem é funcionário da cantina (criado À MÃO no console: ver passo a passo)
+    match /funcionarios/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Abrir/fechar a cantina
+    match /config/{id} {
+      allow read: if logado();
+      allow write: if cantina();
+    }
+
+    // Cardápio. Alunos só podem AUMENTAR o contador "vendidos" (ranking de mais pedidos).
+    match /produtos/{id} {
+      allow read: if logado();
+      allow create, delete: if cantina();
+      allow update: if cantina() || (
+        logado()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['vendidos'])
+        && request.resource.data.vendidos > resource.data.vendidos
+      );
+    }
+
+    // Perfil do aluno (id do documento = uid do login)
+    match /alunos/{uid} {
+      allow read: if logado() && (
+        request.auth.uid == uid
+        || cantina()
+        || resource.data.emailResponsavel == request.auth.token.email
+      );
+      allow create: if logado() && request.auth.uid == uid && request.resource.data.saldo == 0;
+      allow update: if logado() && (
+        // aluno: só pode GASTAR saldo
+        (request.auth.uid == uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['saldo'])
+          && request.resource.data.saldo <= resource.data.saldo
+          && request.resource.data.saldo >= 0)
+        ||
+        // responsável: restrições, limites e recarga de saldo
+        (resource.data.emailResponsavel == request.auth.token.email
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['categoriasBloqueadas', 'itensBloqueados', 'limiteDiario', 'limiteMensal', 'saldo', 'recargas'])
+          && request.resource.data.saldo >= resource.data.saldo)
+      );
+    }
+
+    // Pedidos
+    match /pedidos/{id} {
+      allow read: if logado() && (
+        resource.data.alunoUid == request.auth.uid
+        || cantina()
+        || get(/databases/$(db)/documents/alunos/$(resource.data.alunoUid)).data.emailResponsavel == request.auth.token.email
+      );
+      allow create: if logado()
+        && request.resource.data.alunoUid == request.auth.uid
+        && request.resource.data.status == 'aguardando'
+        && cantinaAberta();
+      allow update: if cantina();
+      allow delete: if false;
+    }
+  }
+}

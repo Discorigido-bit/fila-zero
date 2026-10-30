@@ -37,18 +37,13 @@ function CartaoProduto({ p, rank, vendidos }) {
 export default function Cardapio() {
   const [busca, setBusca] = useState('')
   const [categoria, setCategoria] = useState('Todas')
-  const { produtos, pedidos, cantinaAberta } = useApp()
+  const { produtos, cantinaAberta } = useApp()
 
-  // Ranking calculado com os pedidos reais (atualiza sozinho quando chegam pedidos novos)
-  const maisPedidos = useMemo(() => {
-    const contagem = {}
-    pedidos.filter((p) => p.status !== 'cancelado').forEach((p) => p.itens.forEach((i) => { contagem[i.id] = (contagem[i.id] || 0) + i.qtd }))
-    return produtos
-      .map((p) => ({ ...p, vendidos: contagem[p.id] || 0 }))
-      .filter((p) => p.vendidos > 0)
-      .sort((a, b) => b.vendidos - a.vendidos)
-      .slice(0, 5)
-  }, [pedidos, produtos])
+  // Ranking: cada produto guarda um contador "vendidos" que sobe a cada pedido (atualiza ao vivo)
+  const maisPedidos = useMemo(
+    () => [...produtos].filter((p) => (p.vendidos || 0) > 0).sort((a, b) => b.vendidos - a.vendidos).slice(0, 5),
+    [produtos],
+  )
 
   const filtrados = produtos.filter((p) => {
     const bateCategoria = categoria === 'Todas' || p.categoria === categoria
@@ -86,7 +81,7 @@ export default function Cardapio() {
         <h2 className="titulo-secao">Cardápio completo</h2>
         <div className="grid-produtos">
           {filtrados.map((p) => <CartaoProduto key={p.id} p={p} />)}
-          {filtrados.length === 0 && <p>Nenhum item encontrado.</p>}
+          {filtrados.length === 0 && <p>{produtos.length === 0 ? 'A cantina ainda não cadastrou produtos.' : 'Nenhum item encontrado.'}</p>}
         </div>
       </div>
     </div>

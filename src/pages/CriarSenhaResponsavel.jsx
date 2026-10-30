@@ -8,13 +8,14 @@ export default function CriarSenhaResponsavel() {
   const [novaSenha, setNovaSenha] = useState('')
   const [confirmar, setConfirmar] = useState('')
   const [erro, setErro] = useState('')
+  const [enviando, setEnviando] = useState(false)
   const { criarSenhaResponsavel } = useApp()
   const navigate = useNavigate()
 
   // Se a pessoa cair aqui direto pela URL, sem ter passado pelo login, manda pro login.
   if (!email) return <Navigate to="/responsavel" replace />
 
-  function salvar(e) {
+  async function salvar(e) {
     e.preventDefault()
     if (novaSenha.length < 6) {
       setErro('A senha deve ter no mínimo 6 caracteres.')
@@ -24,7 +25,10 @@ export default function CriarSenhaResponsavel() {
       setErro('As senhas não coincidem.')
       return
     }
-    const resultado = criarSenhaResponsavel(email, novaSenha)
+    setErro('')
+    setEnviando(true)
+    const resultado = await criarSenhaResponsavel(email, novaSenha)
+    setEnviando(false)
     if (resultado.ok) navigate('/responsavel/painel')
     else setErro(resultado.erro)
   }
@@ -48,7 +52,7 @@ export default function CriarSenhaResponsavel() {
             <input type="password" value={confirmar} onChange={(e) => setConfirmar(e.target.value)} placeholder="••••••••" />
           </div>
           {erro && <p className="erro">{erro}</p>}
-          <button className="btn roxo" type="submit">Criar senha e acessar</button>
+          <button className="btn roxo" type="submit" disabled={enviando}>{enviando ? 'Criando...' : 'Criar senha e acessar'}</button>
         </form>
       </div>
     </div>

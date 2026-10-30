@@ -7,6 +7,7 @@ const CAMPOS_INICIAIS = { nome: '', ra: '', email: '', turma: '', emailResponsav
 export default function Cadastro() {
   const [dados, setDados] = useState(CAMPOS_INICIAIS)
   const [erro, setErro] = useState('')
+  const [enviando, setEnviando] = useState(false)
   const { cadastrarAluno } = useApp()
   const navigate = useNavigate()
 
@@ -18,7 +19,7 @@ export default function Cadastro() {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
 
-  function enviar(e) {
+  async function enviar(e) {
     e.preventDefault()
     setErro('')
 
@@ -39,7 +40,8 @@ export default function Cadastro() {
       return
     }
 
-    const resultado = cadastrarAluno({
+    setEnviando(true)
+    const resultado = await cadastrarAluno({
       nome: dados.nome.trim(),
       ra: dados.ra,
       email: dados.email.trim(),
@@ -48,6 +50,7 @@ export default function Cadastro() {
       senha: dados.senha,
     })
 
+    setEnviando(false)
     if (resultado.ok) navigate('/cardapio')
     else setErro(resultado.erro)
   }
@@ -90,7 +93,7 @@ export default function Cadastro() {
           </div>
 
           {erro && <p className="erro">{erro}</p>}
-          <button className="btn" type="submit">Criar conta e entrar</button>
+          <button className="btn" type="submit" disabled={enviando}>{enviando ? 'Criando conta...' : 'Criar conta e entrar'}</button>
         </form>
 
         <p style={{ marginTop: 14 }}>

@@ -32,47 +32,8 @@ export const FORMAS_PAGAMENTO = {
   credito: 'Cartão de crédito',
 }
 
-// Usuários de demonstração
-export const ALUNO_DEMO = {
-  ra: '2024001234',
-  senha: 'senai123',
-  nome: 'Lucas Ferreira',
-  email: 'lucas@aluno.com',
-  turma: 'Técnico em Informática',
-  saldo: 45.5,
-  emailResponsavel: 'responsavel@demo.com',
-  responsavelSenha: 'resp123', // já configurada, pra testar o login direto
-  categoriasBloqueadas: [],
-  itensBloqueados: [],
-  limiteDiario: null,
-  limiteMensal: null,
-  recargas: [],
-}
-export const CANTINA_DEMO = { usuario: 'cantina', senha: 'sesi2026' }
-
-// Pedidos de exemplo (de outros alunos, de 2 dias atrás) só para o ranking
-// "Mais pedidos" já ter dados na primeira abertura. Podem ser apagados.
-export function gerarPedidosIniciais() {
-  const base = Date.now() - 2 * 24 * 3600 * 1000
-  const montar = (n, itens, forma) => {
-    const lista = itens.map(([id, qtd]) => ({ ...PRODUTOS_INICIAIS.find((p) => p.id === id), qtd }))
-    return {
-      id: `FZ-${9000 + n}`,
-      alunoRa: 'exemplo',
-      alunoNome: 'Outro aluno',
-      itens: lista,
-      total: lista.reduce((s, i) => s + i.preco * i.qtd, 0),
-      formaPagamento: forma,
-      status: 'entregue',
-      criadoEm: new Date(base + n * 60000).toISOString(),
-    }
-  }
-  return [
-    montar(1, [['lanche-xburgao', 2], ['bebida-refri', 2]], 'pix'),
-    montar(2, [['lanche-hotdog', 3]], 'debito'),
-    montar(3, [['refeicao-prato', 2], ['bebida-suco', 1]], 'pix'),
-    montar(4, [['lanche-xburgao', 1], ['bebida-refri', 1]], 'saldo'),
-    montar(5, [['combo-estudante', 2]], 'pix'),
-    montar(6, [['bebida-refri', 3]], 'credito'),
-  ]
+// Contadores de exemplo usados só quando a cantina clica em "Carregar cardápio inicial",
+// para o ranking "Mais pedidos" não começar vazio. Podem ser zerados no Firestore.
+export const VENDIDOS_EXEMPLO = {
+  'bebida-refri': 6, 'lanche-xburgao': 3, 'lanche-hotdog': 3, 'refeicao-prato': 2, 'combo-estudante': 2, 'bebida-suco': 1,
 }

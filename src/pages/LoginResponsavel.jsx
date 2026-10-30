@@ -1,18 +1,21 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
-import { ALUNO_DEMO } from '../data/produtos.js'
 
 export default function LoginResponsavel() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
+  const [enviando, setEnviando] = useState(false)
   const { loginResponsavel } = useApp()
   const navigate = useNavigate()
 
-  function entrar(e) {
+  async function entrar(e) {
     e.preventDefault()
-    const resultado = loginResponsavel(email, senha)
+    setErro('')
+    setEnviando(true)
+    const resultado = await loginResponsavel(email, senha)
+    setEnviando(false)
     if (resultado.ok) {
       navigate('/responsavel/painel')
     } else if (resultado.primeiroAcesso) {
@@ -38,11 +41,10 @@ export default function LoginResponsavel() {
             <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} placeholder="Deixe em branco no primeiro acesso" />
           </div>
           {erro && <p className="erro">{erro}</p>}
-          <button className="btn roxo" type="submit">Entrar</button>
+          <button className="btn roxo" type="submit" disabled={enviando}>{enviando ? 'Entrando...' : 'Entrar'}</button>
         </form>
         <div className="demo-box">
-          Demo: <b>{ALUNO_DEMO.emailResponsavel}</b> · Senha <b>{ALUNO_DEMO.responsavelSenha}</b><br />
-          Primeiro acesso: cadastre um aluno novo e entre com o e-mail do responsável dele sem senha.
+          Primeiro acesso? Digite o e-mail que o aluno cadastrou para você e deixe a senha em branco.
         </div>
         <p style={{ marginTop: 14 }}>
           <Link to="/" style={{ fontSize: '.8rem', color: '#6b7280' }}>← Sou aluno</Link>

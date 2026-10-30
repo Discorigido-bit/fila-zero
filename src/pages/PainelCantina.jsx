@@ -20,18 +20,23 @@ function useRelogio() {
 }
 
 function GerenciarCardapio() {
-  const { produtos, adicionarProduto, removerProduto, mostrarToast } = useApp()
+  const { produtos, adicionarProduto, removerProduto, carregarCardapioInicial, mostrarToast } = useApp()
   const [form, setForm] = useState({ nome: '', categoria: CATEGORIAS[0], preco: '', descricao: '' })
   const [erro, setErro] = useState('')
   const set = (campo) => (e) => setForm((f) => ({ ...f, [campo]: e.target.value }))
 
-  function enviar(e) {
+  async function enviar(e) {
     e.preventDefault()
-    const r = adicionarProduto(form)
+    const r = await adicionarProduto(form)
     if (!r.ok) { setErro(r.erro); return }
     setErro('')
     mostrarToast(`${form.nome.trim()} foi adicionado ao cardápio.`, { titulo: 'Produto adicionado' })
     setForm({ nome: '', categoria: form.categoria, preco: '', descricao: '' })
+  }
+  async function carregarInicial() {
+    const r = await carregarCardapioInicial()
+    if (r.ok) mostrarToast('Os 12 produtos iniciais foram adicionados.', { titulo: 'Cardápio carregado' })
+    else mostrarToast(r.erro, { titulo: 'Erro', tipo: 'erro' })
   }
   function remover(p) {
     if (window.confirm(`Remover "${p.nome}" do cardápio? Os alunos não poderão mais pedir este item.`)) {
@@ -74,7 +79,12 @@ function GerenciarCardapio() {
             </div>
           )
         })}
-        {produtos.length === 0 && <p style={{ color: '#6b7280' }}>Nenhum produto. Adicione o primeiro ao lado.</p>}
+        {produtos.length === 0 && (
+          <div>
+            <p style={{ color: '#6b7280' }}>O cardápio está vazio. Adicione produtos ao lado ou carregue os itens iniciais do projeto.</p>
+            <button className="btn roxo" style={{ width: 'auto', padding: '10px 18px' }} onClick={carregarInicial}>Carregar cardápio inicial (12 itens)</button>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -90,8 +100,8 @@ export default function PainelCantina() {
   const pedidosHoje = pedidos.filter((p) => chaveDia(p.criadoEm) === hoje && p.status !== 'cancelado')
   const faturamentoHoje = pedidosHoje.reduce((s, p) => s + p.total, 0)
 
-  function alternar() {
-    alternarCantinaAberta()
+  async function alternar() {
+    await alternarCantinaAberta()
     mostrarToast(cantinaAberta ? 'Novos pedidos estão bloqueados.' : 'Os alunos já podem fazer pedidos.', {
       titulo: cantinaAberta ? 'Cantina fechada' : 'Cantina aberta', tipo: cantinaAberta ? 'info' : 'sucesso',
     })
