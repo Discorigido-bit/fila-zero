@@ -29,7 +29,7 @@ export default function LoginResponsavel() {
   return (
     <div className="tela-cheia roxo">
       <div className="card-login">
-        <div className="logo-emoji" style={{ background: 'var(--roxo)' }}>FZ</div>
+        <div className="logo-emoji" style={{ background: 'var(--roxo)' }}><img src={Logo} alt="logo azul" /></div>
         <h1>Portal do Responsável</h1>
         <p className="subtitulo">Acompanhe e controle os pedidos do seu filho(a)</p>
         <form onSubmit={entrar}>
