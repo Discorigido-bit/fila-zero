@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
+import Logo from '../favicon-64.png'
 
 const CAMPOS_INICIAIS = { nome: '', ra: '', email: '', turma: '', emailResponsavel: '', senha: '', confirmarSenha: '' }
 
@@ -58,7 +59,7 @@ export default function Cadastro() {
   return (
     <div className="tela-cheia">
       <div className="card-login" style={{ maxWidth: 380 }}>
-        <div className="logo-emoji">FZ</div>
+        <div className="logo-emoji"><img src={Logo} alt="logo" /></div>
         <h1>Criar conta</h1>
         <p className="subtitulo">Cadastro do aluno — FilaZero</p>
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
+import Logo from '../favicon-64-azul.png'
 
 export default function LoginResponsavel() {
   const [email, setEmail] = useState('')

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, useLocation, Navigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
+import Logo from '../favicon-64-azul.png'
 
 export default function CriarSenhaResponsavel() {
   const location = useLocation()
@@ -36,7 +37,7 @@ export default function CriarSenhaResponsavel() {
   return (
     <div className="tela-cheia roxo">
       <div className="card-login">
-        <div className="logo-emoji" style={{ background: 'var(--roxo)' }}>FZ</div>
+        <div className="logo-emoji" style={{ background: 'var(--roxo)' }}><img src={Logo} alt="logo azul" /></div>
         <h1>Portal do Responsável</h1>
         <p className="subtitulo">Primeiro acesso — crie uma senha exclusiva</p>
         <p style={{ fontSize: '.8rem', color: '#6b7280', textAlign: 'left', marginBottom: 16 }}>
