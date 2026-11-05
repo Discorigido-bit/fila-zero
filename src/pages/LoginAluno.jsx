@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
+import Logo from '../favicon-64.png'
 
 export default function LoginAluno() {
   const [ra, setRa] = useState('')
@@ -23,7 +24,7 @@ export default function LoginAluno() {
   return (
     <div className="tela-cheia">
       <div className="card-login">
-        <div className="logo-emoji">FZ</div>
+        <div className="logo-emoji"><img src={Logo} alt="logo" /></div>
         <h1>FilaZero</h1>
         <p className="subtitulo">Cantina SESI/SENAI — sem espera, sem fila</p>
         <form onSubmit={entrar}>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp, moeda, chaveDia } from '../context/AppContext.jsx'
 import { CATEGORIAS, FORMAS_PAGAMENTO } from '../data/produtos.js'
+import Logo from '../favicon-32.png'
 
 const COLUNAS = [
   { status: 'aguardando', titulo: 'Aguardando', proximo: 'preparando', acao: 'Iniciar preparo' },
@@ -111,7 +112,7 @@ export default function PainelCantina() {
     <div>
       <header className="header" style={{ flexWrap: 'wrap', gap: 10 }}>
         <div className="marca">
-          <span className="logo-emoji">FZ</span> FilaZero
+          <span className="logo-emoji"><img src={Logo} alt="logo" /></span> FilaZero
           <span className="tag-cantina">Cantina</span>
         </div>
         <div className="relogio">

@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useApp, moeda } from '../context/AppContext.jsx'
+import Logo from '../favicon-32.png'
 
 export default function Header() {
   const { aluno, carrinho, logoutAluno, cantinaAberta } = useApp()
@@ -18,7 +19,7 @@ export default function Header() {
     <>
       <header className="header">
         <div className="marca">
-          <span className="logo-emoji">FZ</span> FilaZero
+          <span className="logo-emoji"><img src={Logo} alt="logo" /></span> FilaZero
         </div>
         {/* Navegação do computador (some no celular) */}
         <nav>
